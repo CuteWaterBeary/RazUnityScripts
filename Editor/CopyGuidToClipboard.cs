@@ -11,14 +11,14 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 
-namespace Raz
+namespace Raz //✧･
 {
     public class CopyGuidToClipboard
     {
-        [MenuItem("Assets/Copy GUID(s) to Clipboard", true)]
+        [MenuItem("Assets/[Asset][Raz] Copy GUID(s) to Clipboard", true)]
         static bool CanCopyGuid() => Selection.assetGUIDs.Length >= 1;
 
-        [MenuItem("Assets/Copy GUID(s) to Clipboard", false, 999)]
+        [MenuItem("Assets/[Asset][Raz] Copy GUID(s) to Clipboard", false, 999)]
         static void CopyGuid()
         {
             if(Selection.assetGUIDs.Length == 1)

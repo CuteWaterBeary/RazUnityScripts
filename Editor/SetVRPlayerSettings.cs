@@ -25,7 +25,7 @@ namespace Raz
     [InitializeOnLoad]
     class SetVRPlayerSettings
     {
-        const string TOOLBAR_PATH = "Tools/VR Player Presets/";
+        const string TOOLBAR_PATH = "Play Mode/VR Player Presets/";
         const string SDK_NAME_MOCKHMD = "MockHMD";
         const string SDK_NAME_OPENVR = "OpenVR";
         const string SDK_NAME_OCULUS = "Oculus";

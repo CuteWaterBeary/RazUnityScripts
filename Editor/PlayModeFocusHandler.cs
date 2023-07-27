@@ -4,7 +4,7 @@
 
 // Instructions: Download script, add to any editor scripts folder (folder named Editor in Assets folder).
 // Usage: Tools -> Playmode Game View Focus to disable/enable this override.
-// Notes:   
+// Notes:
 //  - The game view mode flashes for a couple frames before switching back to the correct window. Could be fixed with more invasive patching.
 //  - Preference is stored in EditorPrefs, should apply across all projects that contain the script.
 //  - Tested in Unity 2019.4.31f1, should work through Unity 2023 (not tested, but has the same function being reflected into)
@@ -23,7 +23,7 @@ namespace Raz
         static readonly MethodInfo tryGetLastFocusedWindowInSameDockMethod;
         static bool showGameViewOnPlayMode = false;
 
-        const string TOOLBAR_PATH = "Tools/Playmode Game View Focus/";
+        const string TOOLBAR_PATH = "Play Mode/Game View Focus/";
         const string EDITOR_PREFS_KEY = "Raz.PlayModeFocusOverride";
 
         static PlayModeFocusHandler()

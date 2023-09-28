@@ -23,7 +23,7 @@ namespace Raz
         static readonly MethodInfo tryGetLastFocusedWindowInSameDockMethod;
         static bool showGameViewOnPlayMode = false;
 
-        const string TOOLBAR_PATH = "Play Mode/Game View Focus/";
+        const string TOOLBAR_PATH = "Window/";
         const string EDITOR_PREFS_KEY = "Raz.PlayModeFocusOverride";
 
         static PlayModeFocusHandler()
@@ -51,20 +51,20 @@ namespace Raz
         static void GetEditorPrefs() => showGameViewOnPlayMode = EditorPrefs.GetBool(EDITOR_PREFS_KEY, showGameViewOnPlayMode);
         static void SetEditorPrefs() => EditorPrefs.SetBool(EDITOR_PREFS_KEY, showGameViewOnPlayMode);
 
-        [MenuItem(TOOLBAR_PATH + "Show GameView on PlayMode", true, 0)]
+        [MenuItem(TOOLBAR_PATH + "Show GameView on PlayMode .raz.", true, 0)]
         static bool CanEnablePlayModeFocus() => showGameViewOnPlayMode == false;
 
-        [MenuItem(TOOLBAR_PATH + "Show GameView on PlayMode", false, 0)]
+        [MenuItem(TOOLBAR_PATH + "Show GameView on PlayMode .raz.", false, 0)]
         public static void EnablePlayModeFocus()
         {
             showGameViewOnPlayMode = true;
             SetEditorPrefs();
         }
 
-        [MenuItem(TOOLBAR_PATH + "Don't show GameView on PlayMode", true, 0)]
+        [MenuItem(TOOLBAR_PATH + "Don't show GameView on PlayMode .raz.", true, 0)]
         static bool CanDisablePlayModeFocus() => showGameViewOnPlayMode == true;
 
-        [MenuItem(TOOLBAR_PATH + "Don't show GameView on PlayMode", false, 0)]
+        [MenuItem(TOOLBAR_PATH + "Don't show GameView on PlayMode .raz.", false, 0)]
         public static void DisablePlayModeFocus()
         {
             showGameViewOnPlayMode = false;

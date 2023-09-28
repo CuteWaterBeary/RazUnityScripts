@@ -17,7 +17,7 @@ using UnityEditor;
 namespace Raz
 {
     public class UnityGuidRegeneratorMenu {
-        [MenuItem("Assets/Regenerate GUIDs/Regenerate")]
+        [MenuItem("Assets/Regenerate GUID(s) and Relink .raz.")]
         public static void RegenerateGuids() {
             if (EditorUtility.DisplayDialog("GUIDs regeneration",
                 "You are going to start the process of GUID regeneration. This may have unexpected results. \n\nMAKE A PROJECT BACKUP BEFORE PROCEEDING!",
@@ -38,7 +38,7 @@ namespace Raz
             }
         }
 
-        [MenuItem("Assets/Regenerate GUIDs/Regenerate (Recursive)")]
+        [MenuItem("Assets/Regenerate GUID(s) and Relink recursively .raz.")]
         public static void RegenerateGuidsRecursive() {
             if (EditorUtility.DisplayDialog("GUIDs regeneration",
                 "You are going to start the process of GUID regeneration. This may have unexpected results. \n\nMAKE A PROJECT BACKUP BEFORE PROCEEDING!",
@@ -118,7 +118,7 @@ namespace Raz
             Dictionary<string, string> guidOldToNewMap = new Dictionary<string, string>();
             Dictionary<string, List<string>> guidsInFileMap = new Dictionary<string, List<string>>();
 
-            // We must only replace GUIDs for Resources present in Assets. 
+            // We must only replace GUIDs for Resources present in Assets.
             // Otherwise built-in resources (shader, meshes etc) get overwritten.
             HashSet<string> ownGuids = new HashSet<string>();
 
@@ -170,7 +170,7 @@ namespace Raz
                 foreach (string oldGuid in guidsInFileMap[filePath]) {
                     if (!ownGuids.Contains(oldGuid))
                         continue;
-                    
+
                     if(!guidsToRegenerate.Contains(oldGuid)) {
                         continue;
                     }

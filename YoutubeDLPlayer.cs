@@ -17,12 +17,12 @@ using Debug = UnityEngine.Debug;
 namespace Raz
 {
     /// <summary> Downloads and plays videos via a VideoPlayer component </summary>
-    public class YtdlpPlayer : MonoBehaviour
+    public class YoutubeDLPlayer : MonoBehaviour
     {
         /// <summary> Ytdlp url (e.g. https://www.youtube.com/watch?v=SFTcZ1GXOCQ) </summary>
         public string ytdlpURL = "https://www.youtube.com/watch?v=SFTcZ1GXOCQ";
 
-        /// <summary> VideoPlayer component associated with the current YtdlpPlayer instance </summary>
+        /// <summary> VideoPlayer component associated with the current YoutubeDLPlayer instance </summary>
         [SerializeReference]
         public VideoPlayer videoPlayer = null;
 
@@ -67,7 +67,7 @@ namespace Raz
                 volume = 0;
                 return false;
             }
-            
+
             volume = audioSourceOutput.volume;
             return true;
         }
@@ -139,22 +139,22 @@ namespace Raz
         }
     }
 
-    [CustomEditor(typeof(YtdlpPlayer))]
-    public class YtdlpPlayerEditor : UnityEditor.Editor 
+    [CustomEditor(typeof(YoutubeDLPlayer))]
+    public class YoutubeDLPlayerEditor : UnityEditor.Editor
     {
-        YtdlpPlayer _ytdlpPlayer;
+        YoutubeDLPlayer _youtubeDLPlayer;
         bool componentGroupFoldout = false;
 
         void OnEnable()
         {
-            _ytdlpPlayer = (YtdlpPlayer) target;
+            _youtubeDLPlayer = (YoutubeDLPlayer) target;
         }
 
         // Force constant updates when playing, so playback time is not behind
         public override bool RequiresConstantRepaint()
         {
-            if(_ytdlpPlayer.videoPlayer != null)
-                return _ytdlpPlayer.videoPlayer.isPlaying;
+            if(_youtubeDLPlayer.videoPlayer != null)
+                return _youtubeDLPlayer.videoPlayer.isPlaying;
             else
                 return false;
         }
@@ -166,12 +166,12 @@ namespace Raz
             #endif
             float playbackTime = 0;
 
-            bool hasPlayer = _ytdlpPlayer.videoPlayer != null;
-            if(hasPlayer && _ytdlpPlayer.videoPlayer.length > 0)
-                playbackTime = _ytdlpPlayer.GetPlaybackTime();
+            bool hasPlayer = _youtubeDLPlayer.videoPlayer != null;
+            if(hasPlayer && _youtubeDLPlayer.videoPlayer.length > 0)
+                playbackTime = _youtubeDLPlayer.GetPlaybackTime();
 
             // URL Input
-            _ytdlpPlayer.ytdlpURL = EditorGUILayout.TextField("URL", _ytdlpPlayer.ytdlpURL);
+            _youtubeDLPlayer.ytdlpURL = EditorGUILayout.TextField("URL", _youtubeDLPlayer.ytdlpURL);
 
             if(!Application.IsPlaying(target))
                 EditorGUILayout.HelpBox("Enter Play Mode to use this component!", MessageType.Info);
@@ -180,25 +180,25 @@ namespace Raz
             using (new EditorGUI.DisabledScope(!hasPlayer || !Application.IsPlaying(target)))
             using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField(new GUIContent($" Seek: {_ytdlpPlayer.CurrentTimeFormatted()} / {_ytdlpPlayer.TotalTimeFormatted()}", EditorGUIUtility.IconContent("d_Slider Icon").image));
+                EditorGUILayout.LabelField(new GUIContent($" Seek: {_youtubeDLPlayer.CurrentTimeFormatted()} / {_youtubeDLPlayer.TotalTimeFormatted()}", EditorGUIUtility.IconContent("d_Slider Icon").image));
                 bool updateURL = GUILayout.Button(new GUIContent(" Reload", EditorGUIUtility.IconContent("TreeEditor.Refresh").image));
                 if(updateURL)
-                    _ytdlpPlayer.UpdateAndPlay();
+                    _youtubeDLPlayer.UpdateAndPlay();
             }
 
             // Seek position should not be editable if video is not playing
-            using (new EditorGUI.DisabledScope(!hasPlayer || !Application.IsPlaying(target) || !_ytdlpPlayer.videoPlayer.isPlaying))
+            using (new EditorGUI.DisabledScope(!hasPlayer || !Application.IsPlaying(target) || !_youtubeDLPlayer.videoPlayer.isPlaying))
             using (new EditorGUILayout.HorizontalScope())
             {
                 // Seekbar input
                 EditorGUI.BeginChangeCheck();
                 playbackTime = GUILayout.HorizontalSlider(playbackTime, 0, 1);
                 if(EditorGUI.EndChangeCheck())
-                    _ytdlpPlayer.SetPlaybackTime(playbackTime);
+                    _youtubeDLPlayer.SetPlaybackTime(playbackTime);
 
                 // Timestamp input
                 EditorGUI.BeginChangeCheck();
-                string currentTimestamp = " " + _ytdlpPlayer.CurrentTimeFormatted();
+                string currentTimestamp = " " + _youtubeDLPlayer.CurrentTimeFormatted();
                 string seekTimestamp = EditorGUILayout.DelayedTextField(currentTimestamp, GUILayout.MaxWidth(8 * currentTimestamp.Length));
                 if(EditorGUI.EndChangeCheck())
                 {
@@ -206,30 +206,30 @@ namespace Raz
                     // Add an extra 00: to force TimeSpan to interpret 12:34 as 00:12:34 for proper mm:ss input
                     if(TimeSpan.TryParse($"00:{seekTimestamp}", out inputTimestamp))
                     {
-                        playbackTime = (float)(inputTimestamp.TotalSeconds / _ytdlpPlayer.videoPlayer.length);
-                        _ytdlpPlayer.SetPlaybackTime(playbackTime);
+                        playbackTime = (float)(inputTimestamp.TotalSeconds / _youtubeDLPlayer.videoPlayer.length);
+                        _youtubeDLPlayer.SetPlaybackTime(playbackTime);
                     }
                 }
             }
 
             float volume;
-            using (new EditorGUI.DisabledScope(!_ytdlpPlayer.GetAudioSourceVolume(out volume)))
+            using (new EditorGUI.DisabledScope(!_youtubeDLPlayer.GetAudioSourceVolume(out volume)))
             {
                 EditorGUI.BeginChangeCheck();
                 volume = EditorGUILayout.Slider(new GUIContent("  AudioSource Gain", EditorGUIUtility.IconContent("d_Profiler.Audio").image), volume, 0.0f, 1.0f);
                 if(EditorGUI.EndChangeCheck())
-                    _ytdlpPlayer.SetAudioSourceVolume(volume);
+                    _youtubeDLPlayer.SetAudioSourceVolume(volume);
             }
 
             componentGroupFoldout = EditorGUILayout.Foldout(componentGroupFoldout, "Components");
             if(componentGroupFoldout)
             {
                 // Video Player/Audio Source
-                _ytdlpPlayer.videoPlayer = (VideoPlayer) EditorGUILayout.ObjectField(new GUIContent("  VideoPlayer", EditorGUIUtility.IconContent("d_Profiler.Video").image), _ytdlpPlayer.videoPlayer, typeof(VideoPlayer), allowSceneObjects: true);
-                _ytdlpPlayer.audioSourceOutput = (AudioSource) EditorGUILayout.ObjectField(new GUIContent("  AudioSource", EditorGUIUtility.IconContent("d_Profiler.Audio").image), _ytdlpPlayer.audioSourceOutput, typeof(AudioSource), allowSceneObjects: true);
+                _youtubeDLPlayer.videoPlayer = (VideoPlayer) EditorGUILayout.ObjectField(new GUIContent("  VideoPlayer", EditorGUIUtility.IconContent("d_Profiler.Video").image), _youtubeDLPlayer.videoPlayer, typeof(VideoPlayer), allowSceneObjects: true);
+                _youtubeDLPlayer.audioSourceOutput = (AudioSource) EditorGUILayout.ObjectField(new GUIContent("  AudioSource", EditorGUIUtility.IconContent("d_Profiler.Audio").image), _youtubeDLPlayer.audioSourceOutput, typeof(AudioSource), allowSceneObjects: true);
             }
 
-            if(GUI.changed){ EditorUtility.SetDirty(_ytdlpPlayer); }
+            if(GUI.changed){ EditorUtility.SetDirty(_youtubeDLPlayer); }
 
         }
     }
@@ -249,13 +249,13 @@ namespace Raz
             _ytdlFound = false;
             #if UNITY_EDITOR_WIN
             string[] splitPath = Application.persistentDataPath.Split('/', '\\');
-            
+
             // Check for yt-dlp in VRC application data first
             _ytdlpPath = string.Join("\\", splitPath.Take(splitPath.Length - 2)) + "\\VRChat\\VRChat\\Tools\\yt-dlp.exe";
             #elif UNITY_EDITOR_LINUX
             _ytdlpPath = "/usr/bin/yt-dlp";
             #endif
-            if (!File.Exists(_ytdlpPath)) 
+            if (!File.Exists(_ytdlpPath))
             {
                 // Check the local path (in the Assets folder)
                 _ytdlpPath = _localYtdlpPath;
@@ -271,13 +271,13 @@ namespace Raz
 
                 if(!Application.isPlaying)
                     EditorApplication.ExitPlaymode();
-                
+
                 #elif UNITY_EDITOR_LINUX
                     EditorUtility.DisplayDialog("[AudioLink] Missing yt-dlp", "Ensure yt-dlp is available in your PATH", "Ok");
                 #endif
             }
 
-            if (!File.Exists(_ytdlpPath)) 
+            if (!File.Exists(_ytdlpPath))
             {
                 // Still don't have it, no dice
                 Debug.LogWarning("[AudioLink] Unable to find yt-dlp");

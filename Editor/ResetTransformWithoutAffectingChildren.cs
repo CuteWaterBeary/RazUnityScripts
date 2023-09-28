@@ -12,11 +12,11 @@ namespace Raz
     public class ResetTransformWithoutAffectingChildren
     {
         // Validate that there's at least one transform selected
-        [MenuItem("GameObject/[GameObject][Raz] Reset Transform Without Affecting Children", true)]
+        [MenuItem("GameObject/Reset Transform Without Affecting Children .raz.", true)]
         static bool CanResetTransform() => Selection.transforms.Length >= 1;
 
         // Reset the transform of the selected GameObjects without affecting the pose of their children
-        [MenuItem("GameObject/[GameObject][Raz] Reset Transform Without Affecting Children", false, 0)]
+        [MenuItem("GameObject/Reset Transform Without Affecting Children .raz.", false, 0)]
         static void ResetTransform()
         {
             // Create a temporary parent object to store the children
